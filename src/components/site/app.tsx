@@ -1,0 +1,225 @@
+"use client";
+
+/**
+ * SiteApp — the whole multi-page PT TOP KONSULTAN INTERNASIONAL experience,
+ * routed by hash so it runs identically on Next.js dev, Node hosting, or
+ * plain shared hosting — with optional initialPath from the SEO catch-all
+ * route so server-rendered HTML shows the right view from the first byte.
+ */
+
+import { RouteProvider, useRoute, useScrollTopOnRoute } from "@/lib/router";
+import { LanguageProvider } from "@/lib/i18n";
+import SeoHead from "@/components/site/seo-head";
+import { slugify } from "@/data/extended-types";
+import { COUNCILS, SERVICES } from "@/data/content";
+import { COUNCIL_PROFILES } from "@/data/council-profiles";
+import { INDUSTRIES } from "@/data/industries";
+import { INSIGHTS } from "@/data/insights";
+import { PERIZINAN } from "@/data/perizinan";
+import { findJasa, findJasaCategory } from "@/data/jasa";
+import Navbar from "@/components/landing/navbar";
+import Footer from "@/components/landing/footer";
+import Preloader from "@/components/landing/preloader";
+import ScrollProgress from "@/components/landing/scroll-progress";
+import WhatsAppFloat from "@/components/landing/whatsapp-float";
+import NotFoundPage from "@/components/site/pages/not-found";
+import HomePage from "@/components/site/pages/home";
+import AboutPage from "@/components/site/pages/about";
+import ServicesPage from "@/components/site/pages/services";
+import ServiceDetailPage from "@/components/site/pages/service-detail";
+import CouncilsPage from "@/components/site/pages/councils";
+import CouncilDetailPage from "@/components/site/pages/council-detail";
+import IndustriesPage from "@/components/site/pages/industries";
+import IndustryDetailPage from "@/components/site/pages/industry-detail";
+import InsightsPage from "@/components/site/pages/insights";
+import InsightDetailPage from "@/components/site/pages/insight-detail";
+import PerizinanPage from "@/components/site/pages/perizinan";
+import PerizinanDetailPage from "@/components/site/pages/perizinan-detail";
+import JasaPage from "@/components/site/pages/jasa";
+import JasaCategoryPage from "@/components/site/pages/jasa-category";
+import JasaDetailPage from "@/components/site/pages/jasa-detail";
+import CareersPage from "@/components/site/pages/careers";
+import MethodPage from "@/components/site/pages/method";
+import ResultsPage from "@/components/site/pages/results";
+import PricingPage from "@/components/site/pages/pricing";
+import GlobalPage from "@/components/site/pages/global";
+import BookingPage from "@/components/site/pages/booking";
+import AwardsPage from "@/components/site/pages/awards";
+import ContactPage from "@/components/site/pages/contact";
+import LegalPage from "@/components/site/pages/legal";
+import FaqPage from "@/components/site/pages/faq";
+import VvipPage from "@/components/site/pages/vvip";
+
+export default function SiteApp({ initialPath = "/" }: { initialPath?: string }) {
+  return (
+    <LanguageProvider>
+      <RouteProvider initialPath={initialPath}>
+        <SeoHead initialPath={initialPath} />
+        <SiteShell />
+      </RouteProvider>
+    </LanguageProvider>
+  );
+}
+
+function SiteShell() {
+  const route = useRoute();
+  useScrollTopOnRoute(route.target ?? "");
+
+  const [seg1, seg2] = route.segments;
+  let view: React.ReactNode;
+
+  if (!route.target || seg1 === undefined) {
+    view = <HomePage />;
+  } else {
+    switch (seg1) {
+      case "about":
+        view = <AboutPage />;
+        break;
+      case "services": {
+        const service = seg2 ? SERVICES.find((s) => s.num === seg2) : undefined;
+        view = service ? (
+          <ServiceDetailPage num={service.num} />
+        ) : seg2 ? (
+          <NotFoundPage />
+        ) : (
+          <ServicesPage />
+        );
+        break;
+      }
+      case "perizinan": {
+        const item = seg2 ? PERIZINAN.find((p) => p.slug === seg2) : undefined;
+        view = item ? (
+          <PerizinanDetailPage slug={item.slug} />
+        ) : seg2 ? (
+          <NotFoundPage />
+        ) : (
+          <PerizinanPage initialCategory={route.query.get("kategori")} />
+        );
+        break;
+      }
+      case "jasa": {
+        const seg3 = route.segments[2];
+        if (!seg2) {
+          view = <JasaPage />;
+        } else if (!seg3) {
+          const cat = findJasaCategory(seg2);
+          view = cat ? <JasaCategoryPage catId={cat.id} /> : <NotFoundPage />;
+        } else {
+          const item = findJasa(seg3);
+          view = item && item.cat === seg2 ? (
+            <JasaDetailPage slug={item.slug} />
+          ) : (
+            <NotFoundPage />
+          );
+        }
+        break;
+      }
+      case "councils": {
+        const council = seg2
+          ? COUNCILS.find((c) => slugify(c.name) === seg2)
+          : undefined;
+        view = council ? (
+          <CouncilDetailPage name={council.name} />
+        ) : seg2 ? (
+          <NotFoundPage />
+        ) : (
+          <CouncilsPage initialFilter={route.query.get("filter")} />
+        );
+        break;
+      }
+      case "industries": {
+        const industry = seg2
+          ? INDUSTRIES.find((i) => i.slug === seg2)
+          : undefined;
+        view = industry ? (
+          <IndustryDetailPage slug={industry.slug} />
+        ) : seg2 ? (
+          <NotFoundPage />
+        ) : (
+          <IndustriesPage />
+        );
+        break;
+      }
+      case "insights": {
+        const insight = seg2
+          ? INSIGHTS.find((i) => i.slug === seg2)
+          : undefined;
+        view = insight ? (
+          <InsightDetailPage slug={insight.slug} />
+        ) : seg2 ? (
+          <NotFoundPage />
+        ) : (
+          <InsightsPage />
+        );
+        break;
+      }
+      case "careers":
+        view = <CareersPage />;
+        break;
+      case "method":
+        view = <MethodPage />;
+        break;
+      case "results":
+        view = <ResultsPage />;
+        break;
+      case "pricing":
+        view = <PricingPage />;
+        break;
+      case "global":
+        view = <GlobalPage />;
+        break;
+      case "booking":
+        view = <BookingPage />;
+        break;
+      case "awards":
+        view = <AwardsPage />;
+        break;
+      case "contact":
+        view = <ContactPage />;
+        break;
+      case "faq":
+        view = <FaqPage />;
+        break;
+      case "privacy":
+        view = <LegalPage docId="privacy" />;
+        break;
+      case "terms":
+        view = <LegalPage docId="terms" />;
+        break;
+      case "cookies":
+        view = <LegalPage docId="cookies" />;
+        break;
+      case "vvip":
+        view = <VvipPage />;
+        break;
+      default: {
+        const profile = COUNCIL_PROFILES[0];
+        void profile;
+        view = <NotFoundPage />;
+      }
+    }
+  }
+
+  /* Judul dokumen & meta per rute dikelola <SeoHead> (sumber: src/lib/seo.ts)
+     — konsisten dengan metadata server-side untuk URL nyata. */
+
+  return (
+    <div className="flex min-h-screen flex-col bg-white text-slate-900">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[110] focus:rounded-full focus:bg-violet-600 focus:px-5 focus:py-2 focus:text-sm focus:font-bold focus:text-white"
+      >
+        Langsung ke konten
+      </a>
+      <Preloader />
+      <ScrollProgress />
+      <Navbar />
+      <main id="main" key={route.target ?? "/"} className="page-enter flex-1">
+        {view}
+      </main>
+      <Footer />
+      {/* Oracle kini eksklusif Member VVIP — hanya di #/vvip, bukan di situs publik. */}
+      <WhatsAppFloat />
+    </div>
+  );
+}
