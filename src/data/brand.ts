@@ -29,6 +29,16 @@ export const BRAND = {
   founded: 2001,
   hq: "Tasikmalaya · Jakarta, Indonesia",
 
+  /**
+   * PENTA-VERSI — versi platform lima segmen (GENERASI.MAYOR.MINOR.PATCH.BUILD).
+   * Sumber kebenaran kanonik: file VERSION di root repo. Titik turunan
+   * (manifest PWA, footer, /api) membaca konstanta ini otomatis.
+   * Penjaga sinkronisasi: `bun run version:check`. Riwayat: CHANGELOG.md.
+   */
+  version: "v2.2.2.2.2",
+  versionCode: "2.2.2.2.2",
+  versionName: "Lima Pilar",
+
   /** Official business line — WhatsApp & telepon satu nomor, aktif 24/7 */
   phone: "+62 813-1651-6524",
   phoneHref: "+6281316516524",

@@ -2,6 +2,8 @@
 
 Ditulis untuk pemula. Tidak perlu latar belakang IT — cukup ikuti langkahnya dari atas ke bawah. Semua yang tertulis di sini adalah kondisi nyata, tanpa janji palsu.
 
+> Berlaku mulai **topkonsultan v2.2.2.2.2 "Lima Pilar"** — riwayat perubahan: [CHANGELOG.md](./CHANGELOG.md).
+
 ---
 
 ## 1. Apa yang otomatis jalan di Vercel (tanpa Anda set apa pun)

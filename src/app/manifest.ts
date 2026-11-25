@@ -1,10 +1,12 @@
 import type { MetadataRoute } from "next";
 import { SITE } from "@/lib/seo";
+import { BRAND } from "@/data/brand";
 
 /**
  * /manifest.webmanifest — PWA manifest lengkap.
  * Ikon PNG dipesan di /icons/* (192, 512, maskable 512) dan
  * /apple-icon.png (180) untuk perangkat Apple.
+ * Versi tersinkron otomatis dari BRAND (PENTA-VERSI) — jangan tulis manual.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -12,6 +14,8 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "TOP Konsultan",
     description: SITE.description,
     id: "/",
+    version: BRAND.versionCode,
+    version_name: `${BRAND.version} "${BRAND.versionName}"`,
     start_url: "/",
     scope: "/",
     display: "standalone",

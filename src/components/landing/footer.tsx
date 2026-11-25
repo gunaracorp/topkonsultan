@@ -332,10 +332,15 @@ export default function Footer() {
           style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
         >
           <p>© {year} {BRAND.legal}. Seluruh masa depan dilindungi.</p>
-          <p className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" aria-hidden="true" />
-            Semua 46 Dewan Pakar sedang online — respons ≤ 48 jam
-          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <p className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" aria-hidden="true" />
+              Semua 46 Dewan Pakar sedang online — respons ≤ 48 jam
+            </p>
+            <p className="font-mono tracking-tight" title={`PENTA-VERSI ${BRAND.version} — "${BRAND.versionName}". Riwayat lengkap: CHANGELOG.md`}>
+              Platform <span className="text-violet-500">{BRAND.version}</span>
+            </p>
+          </div>
         </div>
       </div>
     </footer>

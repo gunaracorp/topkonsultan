@@ -55,7 +55,7 @@ export const SITE = {
 } as const;
 
 /** Tanggal basis terakhir modifikasi konten (ISO 8601) — deterministik antar-build. */
-export const SITE_LASTMOD = "2026-10-17";
+export const SITE_LASTMOD = "2026-11-25";
 
 /** Suffix judul — format konsisten dengan navigasi lama. */
 export const TITLE_SUFFIX = "TOP Konsultan Internasional";
