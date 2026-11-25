@@ -13,6 +13,7 @@ import Comparison from "@/components/landing/comparison";
 import Results from "@/components/landing/results";
 import Accreditation from "@/components/landing/accreditation";
 import Testimonials from "@/components/landing/testimonials";
+import VideoTestimonials from "@/components/landing/video-testimonials";
 import GlobalReach from "@/components/landing/global";
 import { CTABand } from "@/components/site/ui";
 
@@ -32,6 +33,7 @@ export default function HomePage() {
       <Results />
       <Accreditation />
       <Testimonials />
+      <VideoTestimonials />
       <GlobalReach />
       <CTABand />
     </>

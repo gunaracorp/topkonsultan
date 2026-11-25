@@ -30,6 +30,7 @@ const NAV_LINKS: NavItem[] = [
 const MENU_EXTRA: NavItem[] = [
   { to: "/portal", label: "Portal Klien" },
   { to: "/payment", label: "Bayar via QRIS" },
+  { to: "/kalkulator", label: "Kalkulator Biaya Izin" },
   { to: "/pricing", key: "nav.paket" },
   { to: "/global", key: "nav.global" },
   { to: "/booking", key: "nav.jadwal" },

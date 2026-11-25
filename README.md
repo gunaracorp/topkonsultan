@@ -8,7 +8,7 @@
 
 <br/>
 
-**◆ PENTA-VERSI v2.4.0.0.0 — "Transaksi Penuh" ◆**
+**◆ PENTA-VERSI v2.5.0.0.0 — "Konversi & Konten" ◆**
 
 [![Versi](https://img.shields.io/github/package-json/v/gunaracorp/topkonsultan?label=versi&color=7c3aed&style=for-the-badge)](https://github.com/gunaracorp/topkonsultan/blob/main/CHANGELOG.md)
 [![Rilis](https://img.shields.io/github/v/release/gunaracorp/topkonsultan?color=4f46e5&style=for-the-badge&label=rilis)](https://github.com/gunaracorp/topkonsultan/releases)
@@ -114,8 +114,10 @@ Website resmi **PT TOP KONSULTAN INTERNASIONAL** (PUSAT PERIZINAN.COM) — diban
 
 | Metrik | Nilai |
 |---|---|
-| Halaman di-prerender server | **677** |
-| URL di `sitemap.xml` | **667** |
+| Halaman di-prerender server | **684** |
+| URL di `sitemap.xml` | **674** |
+| Esai dewan di blog Wawasan | **12** (10 kategori) |
+| Layanan terkalkulasi di Kalkulator Biaya | **23** (6 kategori) |
 | Layanan jasa dalam katalog | **500** (33 kategori) |
 | Jenis perizinan yang bisa diurus | **36** |
 | Dewan Pakar internasional | **46** |
@@ -130,9 +132,11 @@ Website resmi **PT TOP KONSULTAN INTERNASIONAL** (PUSAT PERIZINAN.COM) — diban
 | ◈ | **Portal Klien — Dasbor Kasus** | Login dengan tiket `TOP-XXXXXX` + email: timeline 6 tahap penanganan real-time, checklist dokumen, kartu tagihan & pembayaran, sambungan langsung ke officer — tanpa password |
 | ◈ | **Pembayaran QRIS Resmi** | QR **PusatPerizinan.com** (NMID ID1026629416698) menerima semua e-wallet & mobile banking; konfirmasi otomatis via WhatsApp di `/payment` |
 | ◈ | **Invoice Online + QRIS Dinamis** | Dokumen tagihan digital dengan kunci akses privat, QRIS nominal-tertanam (EMVCo + CRC16), 12 mata uang, cetak PDF — di `/invoice`; pratinjau interaktif & konverter di `/payment` |
+| ◈ | **Kalkulator Biaya Perizinan** | Estimasi jasa pendampingan dalam 3 langkah — 23 layanan / 6 kategori, 3 kecepatan, rentang biaya & durasi instan, permintaan penawaran WhatsApp terisi otomatis — di `/kalkulator` |
+| ◈ | **Blog Wawasan Penuh + Testimoni Video** | 12 esai dewan (regulasi, perizinan, pajak, strategi) dengan pencarian & filter kategori; testimoni video sinematik 4 bahasa (ID/EN/JA/AR + RTL) di beranda |
 | ◈ | **Oracle AI — Eksklusif VVIP** | Suara bersatu 46 Dewan Pakar di lounge `#/vvip` (kode akses): menjawab perizinan, bisnis, pajak, strategi dalam bahasa apa pun, 24/7 — tidak tampil di situs publik |
 | ◈ | **Katalog 500 Jasa + 36 Perizinan** | PT/PMA, NIB, BPOM, Halal, SNI, KITAS, PSE, OJK… satu gerbang untuk segala izin |
-| ◈ | **SEO Berlapis Penuh** | URL nyata untuk setiap tampilan, JSON-LD schema.org, hreflang 195 bahasa, sitemap 667 URL — lihat detail di bawah |
+| ◈ | **SEO Berlapis Penuh** | URL nyata untuk setiap tampilan, JSON-LD schema.org, hreflang 195 bahasa, sitemap 674 URL — lihat detail di bawah |
 | ◈ | **23 Logo Instansi Resmi** | Kemenkumham, BKPM, Kemenkeu, Kemendag, BPOM, OJK, dan lainnya — instansi yang kami hadapi langsung setiap hari |
 | ◈ | **Galeri Akreditasi** | Foto asli penyerahan sertifikat & kartu indikasi PUSAT PERIZINAN.COM |
 | ◈ | **Form Kontak Bertiket** | Setiap brief terbit nomor tiket unik `TOP-XXXXXX` — tidak ada pesan yang hilang |
@@ -182,9 +186,9 @@ topkonsultan/
 │   │   ├── [[...slug]]/page.tsx  # URL nyata + generateMetadata + JSON-LD — 667 rute
 │   │   ├── layout.tsx            # Metadata global (OG, DC, geo, PWA)
 │   │   ├── robots.ts             # robots.txt dinamis (Sitemap + Host)
-│   │   ├── sitemap.ts            # sitemap.xml — 667 URL + hreflang
+│   │   ├── sitemap.ts            # sitemap.xml — 674 URL + hreflang
 │   │   ├── manifest.ts           # manifest PWA (versi dari BRAND — otomatis)
-│   │   └── api/                  # /api (health+versi), oracle, contact, newsletter, vvip
+│   │   └── api/                  # /api (health+versi), oracle, contact, newsletter, portal, invoice, qris, vvip
 │   ├── components/
 │   │   ├── landing/              # Hero, perizinan, akreditasi, instansi, oracle-chat…
 │   │   └── site/pages/           # 120+ tampilan (hash-router + URL nyata)
@@ -212,17 +216,17 @@ Situs ini memakai **satu sumber kebenaran SEO** (`src/lib/seo.ts`) yang menggera
 
 | Lapisan | Isi |
 |---|---|
-| **URL nyata** | 667 rute (`/perizinan/pendirian-pt`, `/councils/quantum-strategy`, …) di-prerender server — setiap tampilan punya HTML + metadata sendiri, bukan sekadar hash |
+| **URL nyata** | 674 rute (`/perizinan/pendirian-pt`, `/councils/quantum-strategy`, …) di-prerender server — setiap tampilan punya HTML + metadata sendiri, bukan sekadar hash |
 | **Metadata per halaman** | `<title>`, deskripsi, keywords, kanonik, Open Graph, Twitter Card, robots — unik di **setiap** halaman (via `generateMetadata`) |
 | **hreflang** | 27 tautan per halaman: 26 bahasa terjemahan penuh (`?lang=xx`) + `x-default` |
 | **JSON-LD schema.org** | Organization · WebSite (195 `inLanguage`) · LegalService + OfferCatalog 36 izin + 12 praktik · WebPage · BreadcrumbList · Service · Article · FAQPage (10 Q&A) · ItemList · Person |
 | **Metadata global** | Dublin Core (DCMI), geo tags, `business:contact_data`, `apple-web-app`, format-detection, ikon lengkap (SVG/PNG/ICO/apple) |
-| **sitemap.xml** | 667 URL + prioritas + changeFrequency + hreflang; `/vvip` sengaja dikeluarkan |
+| **sitemap.xml** | 674 URL + prioritas + changeFrequency + hreflang; `/vvip` sengaja dikeluarkan |
 | **robots.txt** | Aturan eksplisit bot + `Host:` + `Sitemap:`; `/api/*` disekat |
 | **PWA** | `manifest.webmanifest` + versi aplikasi + ikon 192/512/maskable + shortcut |
 | **Lainnya** | `humans.txt`, `.well-known/security.txt` (RFC 9116), `browserconfig.xml`, 404 bermerek, `/vvip` noindex |
 
-Navigasi hash (`#/perizinan`) **tetap berfungsi penuh** — komponen `SeoHead` menyinkronkan `<head>` secara langsung saat berpindah tampilan tanpa reload. Build produksi menghasilkan **677 halaman statis**.
+Navigasi hash (`#/perizinan`) **tetap berfungsi penuh** — komponen `SeoHead` menyinkronkan `<head>` secara langsung saat berpindah tampilan tanpa reload. Build produksi menghasilkan **684 halaman statis**.
 
 > **Aktivasi Search Console:** setelah mendaftar Google Search Console / Bing / Yandex, tambahkan token verifikasi Anda pada objek `verification` di `src/app/layout.tsx` (template & petunjuk sudah disiapkan di komentar).
 
@@ -246,7 +250,7 @@ Navigasi hash (`#/perizinan`) **tetap berfungsi penuh** — komponen `SeoHead` m
 
 > ❝ *One Gateway for Every License and Business Glory — from company establishment to market domination across 190 countries.* ❞
 
-The official website of **PT TOP KONSULTAN INTERNASIONAL** (PUSAT PERIZINAN.COM) — engineered on the most modern web stack: **Next.js 16 + React 19 + TypeScript + Tailwind CSS 4**, powered by **Z.AI GLM** intelligence, and ready for **zero-config** deployment on Vercel. Versioning follows the five-segment **PENTA-VERSI** scheme (see above) — currently **v2.4.0.0.0 "Full Transactions"**, kept in lockstep across 12 sync points by an automated CI guard.
+The official website of **PT TOP KONSULTAN INTERNASIONAL** (PUSAT PERIZINAN.COM) — engineered on the most modern web stack: **Next.js 16 + React 19 + TypeScript + Tailwind CSS 4**, powered by **Z.AI GLM** intelligence, and ready for **zero-config** deployment on Vercel. Versioning follows the five-segment **PENTA-VERSI** scheme (see above) — currently **v2.5.0.0.0 "Conversion & Content"**, kept in lockstep across 12 sync points by an automated CI guard.
 
 <div align="center">
 <img src="assets/readme/oracle-architecture.svg" alt="Oracle AI Architecture" width="100%"/>
@@ -256,8 +260,10 @@ The official website of **PT TOP KONSULTAN INTERNASIONAL** (PUSAT PERIZINAN.COM)
 
 | Metric | Value |
 |---|---|
-| Server-prerendered pages | **677** |
-| URLs in `sitemap.xml` | **667** |
+| Server-prerendered pages | **684** |
+| URLs in `sitemap.xml` | **674** |
+| Council essays on the Insights blog | **12** (10 categories) |
+| Services priced by the Cost Calculator | **23** (6 categories) |
 | Services in catalog | **500** (33 categories) |
 | Licensing types handled | **36** |
 | International Expert Councils | **46** |
@@ -272,9 +278,11 @@ The official website of **PT TOP KONSULTAN INTERNASIONAL** (PUSAT PERIZINAN.COM)
 | ◈ | **Client Portal — Case Dashboard** | Log in with your `TOP-XXXXXX` ticket + email: real-time 6-stage handling timeline, document checklist, payment channel, direct officer line — zero passwords |
 | ◈ | **Official QRIS Payments** | The **PusatPerizinan.com** QR (NMID ID1026629416698) accepts every Indonesian e-wallet & mobile bank; auto-composed WhatsApp confirmation at `/payment` |
 | ◈ | **Online Invoices + Dynamic QRIS** | Private-link digital invoices with amount-embedded EMVCo QR (CRC16-locked), 12-currency support, print-to-PDF at `/invoice`; interactive preview & converter at `/payment` |
+| ◈ | **Licensing Cost Calculator** | Three-step instant estimates — 23 services across 6 categories, 3 speed tiers, cost & duration ranges, auto-filled WhatsApp quote request at `/kalkulator` |
+| ◈ | **Full Insights Blog + Video Testimonials** | 12 council essays (regulation, licensing, tax, strategy) with instant search & category filters; cinematic video testimonials in 4 languages (ID/EN/JA/AR, RTL-ready) on the homepage |
 | ◈ | **Oracle AI — VVIP Exclusive** | The unified voice of 46 Expert Councils in the `#/vvip` members-only lounge (access code): licensing, business, tax and strategy in any language, 24/7 — hidden from the public site |
 | ◈ | **500-Service Catalog + 36 Permits** | PT/PMA, NIB, BPOM, Halal, SNI, KITAS, PSE, OJK… one gateway for every license |
-| ◈ | **Full-Stack SEO** | Real URLs for every view, schema.org JSON-LD, 195-language hreflang, 667-URL sitemap |
+| ◈ | **Full-Stack SEO** | Real URLs for every view, schema.org JSON-LD, 195-language hreflang, 674-URL sitemap |
 | ◈ | **23 Official Agency Logos** | Kemenkumham, BKPM, Ministry of Finance, Ministry of Trade, BPOM, OJK and more — the agencies we face directly, every day |
 | ◈ | **Accreditation Gallery** | Real photos of certificate handovers and PUSAT PERIZINAN.COM credentials |
 | ◈ | **Ticketed Contact Form** | Every brief receives a unique `TOP-XXXXXX` ticket number — no message is ever lost |
@@ -331,7 +339,7 @@ bun run build           # production build (identical to Vercel)
 | `2.3.1.0.0` | Portal Klien + QRIS | ✅ **Terkirim** — dasbor tiket & timeline 6 tahap, QRIS PusatPerizinan.com di `/payment` |
 | `2.4.0.0.0` | Transaksi Penuh | ✅ **Terkirim** — invoice online `/invoice`, QRIS dinamis nominal-tertanam (EMVCo + CRC16), 12 mata uang, kartu tagihan di portal |
 | `2.4.x.x.x` | Portal v2 | Notifikasi email status, unggah dokumen klien |
-| `2.5.0.0.0` | Konversi & Konten | Blog wawasan penuh, testimoni video, kalkulator biaya perizinan |
+| `2.5.0.0.0` | Konversi & Konten | ✅ **Terkirim** — blog 12 esai + pencarian & filter kategori, testimoni video sinematik 4 bahasa, kalkulator biaya perizinan 23 layanan |
 | `3.0.0.0.0` | Generasi 3 | Oracle AI multi-agen (46 dewan sebagai agen terpisah), pengetahuan internal RAG |
 
 ---
@@ -342,7 +350,7 @@ bun run build           # production build (identical to Vercel)
 
 *Est. 2001 — Tasikmalaya · Jakarta · Melayani 190 Negara / Serving 190 Countries*
 
-**PENTA-VERSI v2.4.0.0.0 — "Transaksi Penuh"** · [CHANGELOG](./CHANGELOG.md) · [Releases](https://github.com/gunaracorp/topkonsultan/releases)
+**PENTA-VERSI v2.5.0.0.0 — "Konversi & Konten"** · [CHANGELOG](./CHANGELOG.md) · [Releases](https://github.com/gunaracorp/topkonsultan/releases)
 
 <sub>© PT TOP KONSULTAN INTERNASIONAL. Seluruh hak cipta / All rights reserved.</sub>
 

@@ -24,6 +24,7 @@ const CLIENT_LINKS = [
   { to: "/portal", label: "Portal Klien" },
   { to: "/invoice", label: "Invoice Online" },
   { to: "/payment", label: "Pembayaran QRIS" },
+  { to: "/kalkulator", label: "Kalkulator Biaya Izin" },
   { to: "/booking", label: "Jadwalkan Sesi" },
   { to: "/pricing", label: "Harga & Paket" },
 ];

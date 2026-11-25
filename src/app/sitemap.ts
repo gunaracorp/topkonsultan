@@ -8,9 +8,9 @@ import {
 } from "@/lib/seo";
 
 /**
- * /sitemap.xml — seluruh 661 URL nyata situs:
- *   127 halaman inti (hreflang 26 bahasa penuh + x-default)
- * + 534 halaman Katalog 500 Jasa Perizinan (hreflang inti id+en+x-default,
+ * /sitemap.xml — seluruh 674 URL nyata situs:
+ *   141 halaman inti & esai wawasan (hreflang 26 bahasa penuh + x-default)
+ * + 533 halaman Katalog 500 Jasa Perizinan (hreflang inti id+en+x-default,
  *   jujur terhadap bahasa konten & menjaga sitemap tetap ringkas).
  * Rute VVIP sengaja dikeluarkan.
  */

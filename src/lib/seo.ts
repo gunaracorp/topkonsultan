@@ -150,7 +150,8 @@ export type RouteKind =
   | "legal" | "vvip" | "service-detail" | "perizinan-detail"
   | "council-detail" | "industry-detail" | "insight-detail" | "not-found"
   | "jasa" | "jasa-category" | "jasa-detail"
-  | "pricing" | "global" | "booking" | "awards" | "portal" | "payment" | "invoice";
+  | "pricing" | "global" | "booking" | "awards" | "portal" | "payment" | "invoice"
+  | "kalkulator";
 
 /** Bahasa hreflang inti untuk halaman katalog 500 jasa (ringkas & jujur). */
 const JASA_LANGS: readonly string[] = ["id", "en"];
@@ -230,8 +231,8 @@ const STATIC_SEO: Record<string, StaticSeo> = {
     kind: "insights",
     title: `Wawasan — ${S}`,
     description:
-      "Wawasan para dewan: analisis strategi, makroekonomi, dan teknologi yang ditulis para ahli lapangan — bukan konten SEO generik. Setiap artikel lahir dari medan perang keputusan, bukan ruang redaksi.",
-    keywords: ["wawasan strategi", "analisis makroekonomi", "artikel konsultan", "insight bisnis"],
+      "Wawasan para dewan: strategi, regulasi, perizinan, pajak, dan teknologi — ditulis para ahli lapangan, bukan mesin SEO. Dari OSS RBA hingga PT PMA, dari halal hingga pajak korporat: setiap esai lahir dari medan keputusan, bukan ruang redaksi.",
+    keywords: ["wawasan strategi", "regulasi perizinan", "artikel konsultan", "insight bisnis", "blog perizinan"],
   },
   "/careers": {
     kind: "careers",
@@ -376,6 +377,20 @@ const STATIC_SEO: Record<string, StaticSeo> = {
       "invoice perizinan",
       "multi mata uang",
       "invoice pusatperizinan",
+    ],
+  },
+  "/kalkulator": {
+    kind: "kalkulator",
+    title: `Kalkulator Biaya Perizinan — Estimasi Instan — ${S}`,
+    description:
+      "Estimasi biaya jasa pendampingan perizinan dalam tiga langkah: pilih kategori (pendirian PT/PMA, NIB OSS, SNI, halal, BPOM, KITAS), pilih layanan, pilih kecepatan — rentang biaya dan durasi tampil seketika, lengkap dengan jalur langsung ke penawaran resmi via WhatsApp.",
+    keywords: [
+      "kalkulator biaya perizinan",
+      "estimasi biaya izin usaha",
+      "biaya pendirian PT",
+      "biaya NIB",
+      "estimasi biaya jasa konsultan",
+      "kalkulator perizinan",
     ],
   },
 };
@@ -678,6 +693,7 @@ export function buildSitemapEntries(): SitemapEntry[] {
     { path: "/pricing", priority: 0.8, changeFrequency: "monthly", lastModified: SITE_LASTMOD },
     { path: "/global", priority: 0.8, changeFrequency: "monthly", lastModified: SITE_LASTMOD },
     { path: "/booking", priority: 0.9, changeFrequency: "weekly", lastModified: SITE_LASTMOD },
+    { path: "/kalkulator", priority: 0.9, changeFrequency: "weekly", lastModified: SITE_LASTMOD },
     { path: "/payment", priority: 0.8, changeFrequency: "monthly", lastModified: SITE_LASTMOD },
     { path: "/invoice", priority: 0.7, changeFrequency: "monthly", lastModified: SITE_LASTMOD },
     { path: "/awards", priority: 0.7, changeFrequency: "monthly", lastModified: SITE_LASTMOD },

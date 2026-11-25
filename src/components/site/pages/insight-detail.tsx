@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, CalendarDays, Clock3, KeyRound, Linkedin, Twitter, UserRound } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarDays, Clock3, KeyRound, Linkedin, Twitter } from "lucide-react";
 import { INSIGHTS } from "@/data/insights";
 import { EASE, Reveal } from "@/components/landing/motion";
 import { CTABand, LinkButton, Ornament } from "@/components/site/ui";
@@ -43,6 +43,20 @@ export default function InsightDetailPage({ slug }: { slug: string }) {
   const prev = INSIGHTS[(idx - 1 + INSIGHTS.length) % INSIGHTS.length];
   const next = INSIGHTS[(idx + 1) % INSIGHTS.length];
 
+  /* Artikel terkait: satu kategori dulu, lalu isi dengan esai terbaru lainnya. */
+  const related = [
+    ...INSIGHTS.filter((i) => i.slug !== insight.slug && i.category === insight.category),
+    ...INSIGHTS.filter((i) => i.slug !== insight.slug && i.category !== insight.category),
+  ].slice(0, 3);
+
+  const authorInitials = insight.author.name
+    .replace(/^(Dr\.|Prof\.)\s+/i, "")
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => Array.from(w)[0] ?? "")
+    .join("")
+    .toUpperCase();
+
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
   const shareText = encodeURIComponent(`${insight.title} — PT TOP KONSULTAN INTERNASIONAL`);
 
@@ -68,9 +82,12 @@ export default function InsightDetailPage({ slug }: { slug: string }) {
               Semua wawasan
             </a>
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="rounded-full border border-violet-300 bg-violet-600/[0.07] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-700">
+              <a
+                href={`#/insights?kategori=${encodeURIComponent(insight.category)}`}
+                className="rounded-full border border-violet-300 bg-violet-600/[0.07] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-700 transition-colors hover:bg-violet-600/[0.14]"
+              >
                 {insight.category}
-              </span>
+              </a>
               <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-slate-900">
                 <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
                 {formatDate(insight.date)}
@@ -113,8 +130,11 @@ export default function InsightDetailPage({ slug }: { slug: string }) {
             className="mt-6 flex flex-wrap items-center justify-between gap-4"
           >
             <p className="flex items-center gap-2.5 text-sm text-slate-500">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-violet-300 bg-violet-50">
-                <UserRound className="h-4 w-4 text-violet-600" aria-hidden="true" />
+              <span
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-indigo-500 font-display text-[12px] font-bold text-white"
+                aria-hidden="true"
+              >
+                {authorInitials}
               </span>
               <span>
                 <span className="block font-semibold text-slate-700">{insight.author.name}</span>
@@ -213,18 +233,79 @@ export default function InsightDetailPage({ slug }: { slug: string }) {
         <Ornament className="mt-12" />
 
         {/* Author box */}
-        <div className="mt-10 rounded-3xl border border-slate-200 bg-white p-7">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-500">
-            Ditulis dari ruang dewan
-          </p>
-          <p className="mt-2 font-display text-lg font-bold text-slate-900">{insight.author.name}</p>
-          <p className="text-[13px] text-slate-900">{insight.author.role}</p>
-          <p className="mt-3 text-sm leading-relaxed text-slate-500">
-            Diterbitkan di bawah doktrin transparansi ruang dewan — penilaian yang berani
-            mencantumkan nama, dalam tradisi Piagam TOP sejak 2001.
-          </p>
+        <div className="mt-10 flex flex-col gap-5 rounded-3xl border border-slate-200 bg-white p-7 sm:flex-row sm:items-center">
+          <span
+            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-500 font-display text-xl font-bold text-white shadow-[0_14px_36px_-12px_rgba(139,92,246,0.55)]"
+            aria-hidden="true"
+          >
+            {authorInitials}
+          </span>
+          <div className="flex-1">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-violet-500">
+              Ditulis dari ruang dewan
+            </p>
+            <p className="mt-1.5 font-display text-lg font-bold text-slate-900">{insight.author.name}</p>
+            <p className="text-[13px] text-slate-900">{insight.author.role}</p>
+            <p className="mt-2.5 text-sm leading-relaxed text-slate-500">
+              Diterbitkan di bawah doktrin transparansi ruang dewan — penilaian yang berani
+              mencantumkan nama, dalam tradisi Piagam TOP sejak 2001.
+            </p>
+            <a
+              href={`#/insights?kategori=${encodeURIComponent(insight.category)}`}
+              className="mt-3 inline-flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.16em] text-violet-600 transition-colors hover:text-violet-700"
+            >
+              Esai lain di kategori {insight.category}
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </a>
+          </div>
         </div>
       </article>
+
+      {/* Baca juga — artikel terkait */}
+      {related.length > 0 && (
+        <section
+          className="mx-auto max-w-7xl px-4 pb-4 pt-8 sm:px-6 lg:px-8"
+          aria-label="Artikel terkait"
+        >
+          <Reveal>
+            <h2 className="mb-6 font-display text-xl font-bold text-slate-900">
+              Baca juga <span className="text-gradient-gold">dari ruang dewan.</span>
+            </h2>
+          </Reveal>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {related.map((r, i) => (
+              <Reveal key={r.slug} delay={i * 0.07} className="h-full">
+                <a
+                  href={`#/insights/${r.slug}`}
+                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/50 hover:shadow-[0_24px_60px_-24px_rgba(139,92,246,0.22)]"
+                  aria-label={`Baca: ${r.title}`}
+                >
+                  <div className="relative h-36 overflow-hidden">
+                    <Image
+                      src={r.cover}
+                      alt={`Ilustrasi sampul untuk ${r.title}`}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <span className="absolute left-4 top-4 rounded-full border border-violet-500/50 bg-white/80 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-violet-600 backdrop-blur">
+                      {r.category}
+                    </span>
+                  </div>
+                  <div className="flex flex-1 flex-col p-5">
+                    <h3 className="font-display text-[15px] font-bold leading-snug text-slate-900 transition-colors group-hover:text-violet-700">
+                      {r.title}
+                    </h3>
+                    <p className="mt-auto pt-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+                      {r.author.name} · {r.readTime} mnt
+                    </p>
+                  </div>
+                </a>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Prev / next */}
       <nav

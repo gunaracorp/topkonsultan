@@ -6,6 +6,24 @@ Format bersandar pada [Keep a Changelog](https://keepachangelog.com/id/1.1.0/) d
 
 ---
 
+## [2.5.0.0.0] — 2026-11-25 · "Konversi & Konten" (Conversion & Content)
+
+### Ditambahkan
+- **Kalkulator Biaya Perizinan (`/kalkulator`)** — estimasi jasa pendampingan dalam tiga langkah (kategori → layanan → kecepatan): **23 layanan dalam 6 kategori** (pendirian PT/PMA/CV/yayasan, NIB OSS RBA, izin sesuai risiko, SNI, ISO, halal BPJPH, izin edar BPOM, PSE, pariwisata, lingkungan, PKP, laporan tahunan, due diligence, KITAS, market entry), **tiga mode kecepatan** (Standar / Cepat / Prioritas Dewan), rentang biaya + durasi dihitung seketika di sisi klien — lengkap dengan tombol **Minta Penawaran via WhatsApp** (ringkasan terisi otomatis), **Salin Ringkasan**, FAQ mini, dan disclaimer transparan (jasa pendampingan vs biaya resmi instansi).
+- **Blog Wawasan Penuh — 6 esai dewan baru (total 12)** di garis depan kompetensi firma: *Hukum Risiko: Peta Baru Perizinan Setelah OSS RB*, *Peta Emas PT PMA*, *Izin PSE dan Uang yang Percaya*, *Dari Dapur ke Rak Global: Halal–BPOM*, *Pajak sebagai Seni Bertahan*, *Konstitusi Perusahaan* — ditulis ketua & mitra dewan (Public Policy, Geopolitical Risk, Data Intelligence, Food & Agriculture, Global Macro, Constitutional Design), dengan 6 sampul ilustrasi baru bergaya editorial.
+- **Pencarian & filter kategori di `/insights`** — pencarian instan (judul, ringkasan, penulis, tag), chip kategori, dukungan URL `?kategori=…`, status jumlah hasil, dan keadaan kosong yang ramah.
+- **Halaman artikel v2** — bagian **"Baca juga"** (3 artikel terkait sekategori), chip kategori tersambut, dan avatar inisial penulis di hero serta kotak penulis.
+- **Testimoni Video Sinematik** di beranda — 4 testimoni klien dalam empat bahasa (Indonesia, Inggris, Jepang, Arab dengan dukungan RTL) diputar sebagai narasi kinetik dengan pemutar lengkap: play/pause, baris sebelumnya/berikutnya, putar ulang, bilah progres, tutup via ESC — menghormati `prefers-reduced-motion` (tanpa autoplay), dan slot `videoUrl` disiapkan untuk footage asli.
+- Modul data baru: `src/data/calculator.ts` (23 layanan, 6 kategori, 3 kecepatan, mesin estimasi) · `src/data/video-testimonials.ts` (4 narasi multi-bahasa).
+
+### Diubah
+- Navigasi: **Kalkulator Biaya Izin** masuk menu mobile navbar & kolom footer "Untuk Klien"; seksi **Testimoni Video** hadir di beranda tepat di bawah testimoni klasik.
+- `/kalkulator` masuk sitemap (prioritas 0.9) dengan metadata SEO + Open Graph lengkap; deskripsi `/insights` dimutakhirkan ke fokus regulasi-perizinan.
+- Angka nyata diperbarui dari build produksi: **684 halaman prerender** · **674 URL sitemap** (141 inti & esai + 533 katalog jasa).
+- Skema versi naik ke MAYOR 5 (era Konversi & Konten) sesuai roadmap.
+
+---
+
 ## [2.4.0.0.0] — 2026-11-25 · "Transaksi Penuh" (Full Transactions)
 
 ### Ditambahkan
