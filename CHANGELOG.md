@@ -6,6 +6,29 @@ Format bersandar pada [Keep a Changelog](https://keepachangelog.com/id/1.1.0/) d
 
 ---
 
+## [2.5.1.0.0] — 2026-11-25 · "Kabar & Berkas" (Portal v2 — News & Documents)
+
+> Menuntaskan janji roadmap **2.4.x.x.x Portal v2**: notifikasi email status + unggah dokumen klien — kini hadir di atas fondasi Generasi 2 era Konversi & Konten.
+
+### Ditambahkan
+- **Unggah Dokumen Klien di `/portal`** — klien mengunggah berkas persyaratan (KTP/NPWP, pas foto, domisili, dst.) langsung dari dasbor: pilih jenis dokumen dari checklist → pilih berkas → kirim. Kartu "Dokumen Kasus" kini menampilkan tiap berkas dengan **status verifikasi** (Menunggu Verifikasi / Terverifikasi / Perlu Perbaikan + catatan officer), tombol **Unduh** (tersaji hanya untuk sesi pemilik tiket), dan **Hapus** untuk berkas yang belum diverifikasi. Checklist kebutuhan otomatis centang hijau saat dokumen terkait lolos verifikasi.
+- **Notifikasi Email Status (7 jenis peristiwa)** — mesin `src/lib/email.ts` merender template email ber-brand (HTML inline-style aman semua klien + teks polos, bahasa Indonesia) lalu mengirim untuk: **tiket terbit** (brief → email sambutan berisi nomor tiket), **tahap penanganan berubah**, **dokumen diterima**, **dokumen terverifikasi**, **dokumen ditolak**, **invoice terbit**, dan **invoice lunas**.
+- **Transport email tiga-mode** — pasang `RESEND_API_KEY` + `EMAIL_FROM` → email terkirim nyata via HTTP API Resend (nol dependensi baru); tanpa kredensial → **mode antrean**: seluruh kabar tetap dipersist & terbaca di portal. Nasib tiap kiriman tercatat (terkirim / antrean / gagal) untuk audit.
+- **Kartu "Kabar Email" di portal** — riwayat lengkap notifikasi kasus (ikon per jenis, subjek, tanggal, status kiriman) sehingga klien tak pernah kehilangan kabar walau email tercecer.
+- **Aksi officer baru di `/api/portal`** — `stage` (ubah tahap penanganan 1–6 + catatan → memicu email status), `doc-verify` / `doc-reject` (verifikasi berkas + catatan → email kabar), `doc-list` (antrean verifikasi lintas kasus) — seluruhnya dilindungi kunci `OFFICER_KEY`.
+- **`GET /api/portal?doc=…&t=…`** — pengunduhan berkas ter-gate sesi portal HMAC (tidak ada enumerasi ID publik); nama file disanitasi untuk header.
+- Tabel Prisma **`CaseDocument`** (berkas + status verifikasi) dan **`Notification`** (log email per kasus), keduanya dengan fallback memori penuh untuk serverless.
+
+### Diperbaiki
+- **Type-check build diaktifkan kembali** — `ignoreBuildErrors` dimatikan; seluruh error TypeScript terpendam (portal fallback `createdAt`, `note` invoice nullable, `version` PWA manifest, tipe `registerMemoryCase`) dibereskan hingga `tsc --noEmit` 100% bersih dan build 684 halaman lulus dengan pemeriksaan tipe aktif.
+- Direktori referensi non-aplikasi (`examples/`, `skills/`, `mini-services/`) dikeluarkan dari cakupan `tsconfig` agar `tsc` mencerminkan kesehatan kode aplikasi sebenarnya.
+
+### Diubah
+- Respons `/api/contact` kini menyertakan tautan portal; pengiriman notifikasi tidak pernah dapat membatalkan aksi utamanya (unggah, terbit invoice, ubah tahap).
+- Nomor versi naik ke MINOR 1 (2.5.x) sesuai janji roadmap Portal v2.
+
+---
+
 ## [2.5.0.0.0] — 2026-11-25 · "Konversi & Konten" (Conversion & Content)
 
 ### Ditambahkan

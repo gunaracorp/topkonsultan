@@ -152,7 +152,7 @@ export async function issueInvoice(input: IssueInput): Promise<InvoiceRecord> {
     amount: data.amount,
     amountIdr: data.amountIdr,
     status: "unpaid",
-    note: data.note,
+    note: data.note ?? null,
     viewToken: newViewToken(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),

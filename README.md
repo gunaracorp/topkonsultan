@@ -8,7 +8,7 @@
 
 <br/>
 
-**◆ PENTA-VERSI v2.5.0.0.0 — "Konversi & Konten" ◆**
+**◆ PENTA-VERSI v2.5.1.0.0 — "Kabar & Berkas" ◆**
 
 [![Versi](https://img.shields.io/github/package-json/v/gunaracorp/topkonsultan?label=versi&color=7c3aed&style=for-the-badge)](https://github.com/gunaracorp/topkonsultan/blob/main/CHANGELOG.md)
 [![Rilis](https://img.shields.io/github/v/release/gunaracorp/topkonsultan?color=4f46e5&style=for-the-badge&label=rilis)](https://github.com/gunaracorp/topkonsultan/releases)
@@ -250,7 +250,7 @@ Navigasi hash (`#/perizinan`) **tetap berfungsi penuh** — komponen `SeoHead` m
 
 > ❝ *One Gateway for Every License and Business Glory — from company establishment to market domination across 190 countries.* ❞
 
-The official website of **PT TOP KONSULTAN INTERNASIONAL** (PUSAT PERIZINAN.COM) — engineered on the most modern web stack: **Next.js 16 + React 19 + TypeScript + Tailwind CSS 4**, powered by **Z.AI GLM** intelligence, and ready for **zero-config** deployment on Vercel. Versioning follows the five-segment **PENTA-VERSI** scheme (see above) — currently **v2.5.0.0.0 "Conversion & Content"**, kept in lockstep across 12 sync points by an automated CI guard.
+The official website of **PT TOP KONSULTAN INTERNASIONAL** (PUSAT PERIZINAN.COM) — engineered on the most modern web stack: **Next.js 16 + React 19 + TypeScript + Tailwind CSS 4**, powered by **Z.AI GLM** intelligence, and ready for **zero-config** deployment on Vercel. Versioning follows the five-segment **PENTA-VERSI** scheme (see above) — currently **v2.5.1.0.0 "News & Documents"**, kept in lockstep across 12 sync points by an automated CI guard.
 
 <div align="center">
 <img src="assets/readme/oracle-architecture.svg" alt="Oracle AI Architecture" width="100%"/>
@@ -338,8 +338,8 @@ bun run build           # production build (identical to Vercel)
 |---|---|---|
 | `2.3.1.0.0` | Portal Klien + QRIS | ✅ **Terkirim** — dasbor tiket & timeline 6 tahap, QRIS PusatPerizinan.com di `/payment` |
 | `2.4.0.0.0` | Transaksi Penuh | ✅ **Terkirim** — invoice online `/invoice`, QRIS dinamis nominal-tertanam (EMVCo + CRC16), 12 mata uang, kartu tagihan di portal |
-| `2.4.x.x.x` | Portal v2 | Notifikasi email status, unggah dokumen klien |
 | `2.5.0.0.0` | Konversi & Konten | ✅ **Terkirim** — blog 12 esai + pencarian & filter kategori, testimoni video sinematik 4 bahasa, kalkulator biaya perizinan 23 layanan |
+| `2.5.1.0.0` | Portal v2 (janji 2.4.x) | ✅ **Terkirim** — unggah dokumen klien + verifikasi officer, notifikasi email status 7 jenis peristiwa (tiket, tahap, dokumen, invoice), kartu Kabar Email di `/portal` |
 | `3.0.0.0.0` | Generasi 3 | Oracle AI multi-agen (46 dewan sebagai agen terpisah), pengetahuan internal RAG |
 
 ---
@@ -350,7 +350,7 @@ bun run build           # production build (identical to Vercel)
 
 *Est. 2001 — Tasikmalaya · Jakarta · Melayani 190 Negara / Serving 190 Countries*
 
-**PENTA-VERSI v2.5.0.0.0 — "Konversi & Konten"** · [CHANGELOG](./CHANGELOG.md) · [Releases](https://github.com/gunaracorp/topkonsultan/releases)
+**PENTA-VERSI v2.5.1.0.0 — "Kabar & Berkas"** · [CHANGELOG](./CHANGELOG.md) · [Releases](https://github.com/gunaracorp/topkonsultan/releases)
 
 <sub>© PT TOP KONSULTAN INTERNASIONAL. Seluruh hak cipta / All rights reserved.</sub>
 

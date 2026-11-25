@@ -83,3 +83,39 @@ model Invoice {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+/// Portal v2 — berkas yang diunggah klien untuk kasusnya (v2.5.1.0.0).
+/// Diunggah via /api/portal (aksi `upload`, sesi token HMAC); diverifikasi
+/// officer (aksi `doc-verify` / `doc-reject`, kunci OFFICER_KEY).
+/// `name` = jenis dokumen (checklist DOCS), `filename` = nama file asli,
+/// `data` = konten base64 (maks 4 MB per berkas).
+model CaseDocument {
+  id        String   @id @default(cuid())
+  ticket    String
+  name      String
+  filename  String
+  mime      String
+  size      Int
+  data      String
+  status    String   @default("pending") // pending | verified | rejected
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Portal v2 — log notifikasi email per kasus (v2.5.1.0.0).
+/// Setiap peristiwa kasus (tiket terbit, tahap berubah, dokumen, invoice)
+/// menghasilkan satu baris; `status` mencatat nasib pengiriman:
+/// queued (mode antrean tanpa kredensial pengirim) | sent | failed.
+model Notification {
+  id        String   @id @default(cuid())
+  ticket    String
+  toEmail   String
+  kind      String // case-created | stage | doc-received | doc-verified | doc-rejected | invoice-issued | invoice-paid
+  subject   String
+  bodyText  String
+  bodyHtml  String
+  status    String   @default("queued")
+  error     String?
+  createdAt DateTime @default(now())
+}

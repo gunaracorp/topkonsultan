@@ -9,7 +9,9 @@ import { BRAND } from "@/data/brand";
  * Versi tersinkron otomatis dari BRAND (PENTA-VERSI) — jangan tulis manual.
  */
 export default function manifest(): MetadataRoute.Manifest {
-  return {
+  // Catatan: `version` adalah kolom sah W3C Web App Manifest; tipe bawaan
+  // Next belum memuatnya, jadi literal ini dicanangkan lewat perluasan tipe.
+  const m = {
     name: `${SITE.name} — ${SITE.wordmark}`,
     short_name: "TOP Konsultan",
     description: SITE.description,
@@ -50,4 +52,5 @@ export default function manifest(): MetadataRoute.Manifest {
       },
     ],
   };
+  return m as MetadataRoute.Manifest;
 }

@@ -13,6 +13,7 @@ import {
 } from "@/lib/invoice";
 import { QRIS, formatMoney, formatIdr } from "@/data/payment";
 import { BRAND } from "@/data/brand";
+import { notify } from "@/lib/email";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -135,6 +136,16 @@ export async function POST(req: Request) {
         note: b.note == null ? null : String(b.note),
       });
       console.log(`[invoice] issued ${rec.number} for ${rec.ticket} — ${rec.amountIdr} IDR (${rec.currency})`);
+      // Portal v2 — email "invoice terbit" ke klien (tidak pernah menggagalkan penerbitan).
+      await notify("invoice-issued", {
+        ticket: rec.ticket,
+        clientName: rec.clientName,
+        clientEmail: rec.clientEmail,
+        service: rec.service,
+        invoiceNumber: rec.number,
+        invoiceAmount: formatIdr(rec.amountIdr),
+        invoiceUrl: `${BRAND.url}/invoice?no=${encodeURIComponent(rec.number)}&k=${encodeURIComponent(rec.viewToken)}`,
+      });
       return NextResponse.json({ ok: true, invoice: toPayload(rec) });
     } catch (err) {
       const code = err instanceof Error ? err.message : "issue_failed";
@@ -150,6 +161,16 @@ export async function POST(req: Request) {
     const rec = await setInvoiceStatus(String(b.number ?? ""), "paid", b.note == null ? null : String(b.note));
     if (!rec) return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
     console.log(`[invoice] ${rec.number} marked PAID`);
+    // Portal v2 — email "invoice lunas" ke klien (tidak pernah menggagalkan aksi).
+    await notify("invoice-paid", {
+      ticket: rec.ticket,
+      clientName: rec.clientName,
+      clientEmail: rec.clientEmail,
+      service: rec.service,
+      invoiceNumber: rec.number,
+      invoiceAmount: formatIdr(rec.amountIdr),
+      invoiceUrl: `${BRAND.url}/invoice?no=${encodeURIComponent(rec.number)}&k=${encodeURIComponent(rec.viewToken)}`,
+    });
     return NextResponse.json({ ok: true, invoice: toPayload(rec) });
   }
 

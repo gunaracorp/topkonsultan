@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { registerMemoryCase, TYPE_LABELS } from "@/lib/portal";
+import { notify } from "@/lib/email";
+import { BRAND } from "@/data/brand";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -110,10 +112,19 @@ export async function POST(req: Request) {
       console.warn(`[contact] DB unavailable — ${refCode} held in chamber memory`, dbError);
     }
 
+    // Portal v2 — email sambutan + tiket untuk klien (tidak pernah menggagalkan brief).
+    await notify("case-created", {
+      ticket: refCode,
+      clientName: name,
+      clientEmail: email,
+      service: TYPE_LABELS[type] ?? "Konsultasi Umum",
+    });
+
     return NextResponse.json({
       ok: true,
       id: refCode,
       message: "46 Dewan Pakar telah menghadir untuk brief Anda.",
+      portal: `${BRAND.url}/portal`,
     });
   } catch {
     return NextResponse.json(

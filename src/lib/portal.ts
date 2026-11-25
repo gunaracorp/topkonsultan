@@ -116,10 +116,16 @@ const DEMO_CASES: CaseRecord[] = [
   },
 ];
 
-export function registerMemoryCase(rec: Omit<CaseRecord, "stage" | "updatedAt" | "source"> & { stage?: number }): void {
+export function registerMemoryCase(
+  rec: Omit<CaseRecord, "createdAt" | "stage" | "updatedAt" | "source"> & {
+    stage?: number;
+    createdAt?: string;
+  }
+): void {
   memoryCases.set(rec.refCode, {
     ...rec,
     stage: rec.stage ?? 1,
+    createdAt: rec.createdAt ?? new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     source: "memory",
   });
@@ -252,4 +258,74 @@ export async function getCaseByTicket(ticket: string): Promise<CaseRecord | null
     // fallback
   }
   return memoryCases.get(t) ?? DEMO_CASES.find((c) => c.refCode === t) ?? null;
+}
+
+function dbRowToRecord(
+  rec: {
+    refCode: string; email: string; name: string; company: string | null;
+    service: string | null; stage: number; note: string | null;
+    createdAt: Date; updatedAt: Date;
+  },
+  source: CaseRecord["source"]
+): CaseRecord {
+  return {
+    refCode: rec.refCode,
+    email: rec.email,
+    name: rec.name,
+    company: rec.company,
+    service: rec.service,
+    stage: rec.stage,
+    note: rec.note,
+    createdAt: rec.createdAt.toISOString(),
+    updatedAt: rec.updatedAt.toISOString(),
+    source,
+  };
+}
+
+/**
+ * Ubah tahap penanganan kasus (officer — aksi `stage` /api/portal).
+ * Menaikkan ATAU menurunkan tahap diperbolehkan (koreksi tim), catatan opsional.
+ * Kasus yang belum ter-bootstrap di DB akan diperbarui di fallback memori.
+ */
+export async function setCaseStage(
+  ticket: string,
+  stage: number,
+  note?: string | null
+): Promise<CaseRecord | null> {
+  const t = normalizeTicket(ticket);
+  const s = Math.min(Math.max(Math.round(Number(stage) || 1), 1), STAGES.length);
+  if (!t) return null;
+  const cleanNote = note?.trim().slice(0, 500) || null;
+
+  try {
+    // Pastikan baris kasus ada (bootstrap bila kasusnya masih di ContactMessage).
+    const existing = await db.clientCase.findUnique({ where: { refCode: t } });
+    if (!existing) {
+      const contact = await db.contactMessage.findUnique({ where: { refCode: t } });
+      if (!contact) return null;
+      await db.clientCase.create({
+        data: {
+          refCode: contact.refCode,
+          email: contact.email,
+          name: contact.name,
+          company: contact.company,
+          service: TYPE_LABELS[contact.type] ?? "Konsultasi Umum",
+          stage: 1,
+        },
+      });
+    }
+    const row = await db.clientCase.update({
+      where: { refCode: t },
+      data: { stage: s, note: cleanNote ?? undefined },
+    });
+    return dbRowToRecord(row, "db");
+  } catch {
+    // Fallback memori / demo (serverless read-only).
+    const mem = memoryCases.get(t) ?? DEMO_CASES.find((c) => c.refCode === t);
+    if (!mem) return null;
+    mem.stage = s;
+    if (cleanNote != null) mem.note = cleanNote;
+    mem.updatedAt = new Date().toISOString();
+    return { ...mem };
+  }
 }
