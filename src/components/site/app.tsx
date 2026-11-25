@@ -51,6 +51,7 @@ import FaqPage from "@/components/site/pages/faq";
 import VvipPage from "@/components/site/pages/vvip";
 import PortalPage from "@/components/site/pages/portal";
 import PaymentPage from "@/components/site/pages/payment";
+import InvoicePage from "@/components/site/pages/invoice";
 
 export default function SiteApp({ initialPath = "/" }: { initialPath?: string }) {
   return (
@@ -199,6 +200,9 @@ function SiteShell() {
         break;
       case "payment":
         view = <PaymentPage />;
+        break;
+      case "invoice":
+        view = <InvoicePage />;
         break;
       default: {
         const profile = COUNCIL_PROFILES[0];

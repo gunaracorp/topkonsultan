@@ -6,6 +6,26 @@ Format bersandar pada [Keep a Changelog](https://keepachangelog.com/id/1.1.0/) d
 
 ---
 
+## [2.4.0.0.0] — 2026-11-25 · "Transaksi Penuh" (Full Transactions)
+
+### Ditambahkan
+- **Invoice Online (`/invoice`)** — setiap tagihan kini hadir sebagai dokumen digital resmi: dicari dengan nomor invoice (`INV-2026-XXXXXX`) + kunci akses privat 22 karakter, menampilkan identitas penerbit, rincian layanan, nominal multi-mata uang, panel pembayaran, dan tombol **Cetak / Simpan PDF** dengan tata letak cetak bersih. Tautan invoice dapat dibagikan langsung (`/invoice?no=…&k=…`).
+- **QRIS Dinamis per transaksi** — mesin `src/lib/qris.ts` membangun payload QRIS standar EMVCo (Point of Initiation `12`) dengan **nominal Rupiah tertanam** (tag 54) dan nomor invoice sebagai referensi transaksi (tag 62.01), dikunci integritasnya dengan **CRC16-CCITT**. Aplikasi pemindai mengisi nominal otomatis — tanpa salah ketik. QR statis resmi tetap tersedia sebagai kanal utama.
+- **`/api/qris`** — merender payload QRIS menjadi **gambar QR SVG** (512px, koreksi error M); mode invoice (`?number=…&k=…`) dan mode payload jadi yang **wajib lolos verifikasi CRC16** — bukan generator QR bebas.
+- **`/api/invoice`** — enam aksi: `view` (token-gated publik), `mine` (sesi portal klien), `issue` / `mark-paid` / `void` / `list` (dilindungi kunci `OFFICER_KEY`). Penomoran `INV-<tahun>-<base36>` unik; tahan banting dengan fallback memori penuh untuk serverless.
+- **Multi-mata uang** — invoice dapat diterbitkan dalam **12 mata uang** (IDR, USD, EUR, SGD, GBP, JPY, AUD, CNY, AED, SAR, MYR, THB) dengan ekuivalen Rupiah berdasarkan kurs referensi bertanggal; QRIS selalu menyelesaikan dana dalam Rupiah.
+- **Kartu "Tagihan & Pembayaran" di Portal Klien** — klien yang login melihat seluruh invoice kasusnya (nomor, layanan, nominal, status Lunas/Belum Bayar/Batal) dengan tautan langsung membuka dokumennya.
+- **Seksi "Transaksi Penuh" di `/payment`** — pratinjau QRIS dinamis interaktif (nominal diubah → QR berubah seketika), konverter 12 mata uang → ekuivalen QRIS, dan gerbang Invoice Online.
+- **Invoice demo permanen**: `INV-DEMO2026` · kunci `DEMO` (Rp 12.500.000, tiket TOP-DEMO2026) — siapa pun bisa mencoba.
+- Tabel Prisma **`Invoice`** (nomor, tiket, klien, layanan, mata uang, nominal, ekuivalen IDR, status, token tampilan).
+
+### Diubah
+- Navigasi: tautan **Invoice Online** di kolom footer "Untuk Klien".
+- `/invoice` masuk sitemap (indeksable); metadata SEO lengkap + Open Graph.
+- Skema versi naik ke MAYOR 4 (era Transaksi Penuh) sesuai roadmap.
+
+---
+
 ## [2.3.1.0.0] — 2026-11-25 · "Gerbang Klien" (The Client Gateway)
 
 ### Ditambahkan

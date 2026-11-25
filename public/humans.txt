@@ -8,7 +8,7 @@
         Multibahasa: 195 bahasa — pemilih bahasa + Oracle AI
 
 /* SITE */
-        Versi: v2.3.1.0.0 "Gerbang Klien" — PENTA-VERSI (satu sumber kebenaran: file VERSION)
+        Versi: v2.4.0.0.0 "Transaksi Penuh" — PENTA-VERSI (satu sumber kebenaran: file VERSION)
         Standar: HTML5, WCAG-friendly (skip-link, focus management, prefers-reduced-motion)
         Bahasa terakhir: Bahasa Indonesia (id) — 194 bahasa lain dapat dipilih
         Komponen: Next.js 16 (React 19) · TypeScript · Tailwind CSS 4 · Prisma

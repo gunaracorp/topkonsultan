@@ -150,7 +150,7 @@ export type RouteKind =
   | "legal" | "vvip" | "service-detail" | "perizinan-detail"
   | "council-detail" | "industry-detail" | "insight-detail" | "not-found"
   | "jasa" | "jasa-category" | "jasa-detail"
-  | "pricing" | "global" | "booking" | "awards" | "portal" | "payment";
+  | "pricing" | "global" | "booking" | "awards" | "portal" | "payment" | "invoice";
 
 /** Bahasa hreflang inti untuk halaman katalog 500 jasa (ringkas & jujur). */
 const JASA_LANGS: readonly string[] = ["id", "en"];
@@ -362,6 +362,20 @@ const STATIC_SEO: Record<string, StaticSeo> = {
       "bayar perizinan",
       "qris konsultan",
       "NMID ID1026629416698",
+    ],
+  },
+  "/invoice": {
+    kind: "invoice",
+    title: `Invoice Online — Transaksi Penuh — ${S}`,
+    description:
+      "Invoice online resmi PT TOP KONSULTAN INTERNASIONAL: buka tagihan dengan nomor invoice + kunci akses, bayar via QRIS dinamis dengan nominal tertanam, dukungan multi-mata uang untuk klien internasional, cetak & simpan PDF.",
+    keywords: [
+      "invoice online",
+      "tagihan konsultan",
+      "qris dinamis",
+      "invoice perizinan",
+      "multi mata uang",
+      "invoice pusatperizinan",
     ],
   },
 };
@@ -650,7 +664,7 @@ export interface SitemapEntry {
   languageSet?: "full" | "core";
 }
 
-/** Entri sitemap.xml — 661 URL: 127 halaman inti + 534 halaman katalog 500 jasa (VVIP dikeluarkan). */
+/** Entri sitemap.xml — halaman inti + katalog 500 jasa (VVIP & Portal dikeluarkan). */
 export function buildSitemapEntries(): SitemapEntry[] {
   const entries: SitemapEntry[] = [
     { path: "/", priority: 1.0, changeFrequency: "daily", lastModified: SITE_LASTMOD },
@@ -665,6 +679,7 @@ export function buildSitemapEntries(): SitemapEntry[] {
     { path: "/global", priority: 0.8, changeFrequency: "monthly", lastModified: SITE_LASTMOD },
     { path: "/booking", priority: 0.9, changeFrequency: "weekly", lastModified: SITE_LASTMOD },
     { path: "/payment", priority: 0.8, changeFrequency: "monthly", lastModified: SITE_LASTMOD },
+    { path: "/invoice", priority: 0.7, changeFrequency: "monthly", lastModified: SITE_LASTMOD },
     { path: "/awards", priority: 0.7, changeFrequency: "monthly", lastModified: SITE_LASTMOD },
     { path: "/faq", priority: 0.8, changeFrequency: "monthly", lastModified: SITE_LASTMOD },
     { path: "/about", priority: 0.7, changeFrequency: "monthly", lastModified: SITE_LASTMOD },

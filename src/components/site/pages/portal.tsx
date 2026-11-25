@@ -29,6 +29,7 @@ import {
   LogOut,
   MessageCircle,
   QrCode,
+  Receipt,
   RefreshCw,
   ShieldCheck,
   UserRound,
@@ -66,6 +67,28 @@ interface PortalCase {
 
 type Phase = "idle" | "loading" | "locked" | "open";
 
+/** Ringkasan invoice untuk kartu Tagihan & Pembayaran (aksi `mine`). */
+interface InvoiceLite {
+  number: string;
+  status: "unpaid" | "paid" | "void";
+  service: string;
+  currency: string;
+  amountFormatted: string;
+  amountIdrFormatted: string;
+  isForeign: boolean;
+  url: string;
+  createdAt: string;
+}
+
+const INVOICE_STATUS_UI: Record<
+  InvoiceLite["status"],
+  { label: string; cls: string }
+> = {
+  unpaid: { label: "Belum Bayar", cls: "border-amber-400/30 bg-amber-500/10 text-amber-300" },
+  paid: { label: "Lunas", cls: "border-emerald-400/30 bg-emerald-500/10 text-emerald-300" },
+  void: { label: "Batal", cls: "border-red-400/30 bg-red-500/10 text-red-300" },
+};
+
 function fmtDate(iso: string): string {
   return new Intl.DateTimeFormat("id-ID", {
     day: "numeric",
@@ -81,6 +104,26 @@ export default function PortalPage() {
   const [error, setError] = useState<string | null>(null);
   const [caseData, setCaseData] = useState<PortalCase | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [invoices, setInvoices] = useState<InvoiceLite[] | null>(null);
+
+  /** Ambil invoice milik tiket ini (Transaksi Penuh — /api/invoice `mine`). */
+  const loadInvoices = useCallback(async (portalToken: string) => {
+    try {
+      const res = await fetch("/api/invoice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "mine", portalToken }),
+      });
+      if (!res.ok) {
+        setInvoices(null);
+        return;
+      }
+      const data = (await res.json()) as { ok: boolean; invoices?: InvoiceLite[] };
+      setInvoices(data.ok ? (data.invoices ?? []) : null);
+    } catch {
+      setInvoices(null);
+    }
+  }, []);
 
   const loadCase = useCallback(async (token: string, silent = false): Promise<boolean> => {
     if (!silent) setRefreshing(true);
@@ -116,6 +159,13 @@ export default function PortalPage() {
       setPhase("locked");
     }
   }, [loadCase]);
+
+  /* Saat dasbor terbuka → muat invoice milik tiket ini (Transaksi Penuh). */
+  useEffect(() => {
+    if (phase !== "open") return;
+    const t = window.sessionStorage.getItem(TOKEN_KEY);
+    if (t) void loadInvoices(t);
+  }, [phase, loadInvoices]);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -342,7 +392,10 @@ export default function PortalPage() {
                   type="button"
                   onClick={() => {
                     const t = window.sessionStorage.getItem(TOKEN_KEY);
-                    if (t) void loadCase(t);
+                    if (t) {
+                      void loadCase(t);
+                      void loadInvoices(t);
+                    }
                   }}
                   disabled={refreshing}
                   className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2.5 text-[12.5px] font-semibold text-zinc-300 transition-colors hover:border-violet-400/40 hover:text-violet-300 disabled:opacity-50"
@@ -499,6 +552,67 @@ export default function PortalPage() {
                       </li>
                     ))}
                   </ul>
+                </div>
+
+                {/* Tagihan & Pembayaran (Transaksi Penuh) */}
+                <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-xl sm:p-7">
+                  <h2 className="flex items-center gap-2.5 font-display text-lg font-bold tracking-wide">
+                    <Receipt className="h-4.5 w-4.5 text-violet-300" aria-hidden="true" />
+                    Tagihan & Pembayaran
+                  </h2>
+                  {invoices === null ? (
+                    <p className="mt-4 text-[12.5px] leading-relaxed text-zinc-500">
+                      Riwayat tagihan belum dapat dimuat untuk sesi ini.
+                    </p>
+                  ) : invoices.length === 0 ? (
+                    <p className="mt-4 text-[12.5px] leading-relaxed text-zinc-500">
+                      Belum ada invoice untuk kasus ini. Tagihan resmi akan muncul otomatis di sini
+                      begitu diterbitkan officer.
+                    </p>
+                  ) : (
+                    <ul className="mt-5 space-y-3">
+                      {invoices.map((inv) => {
+                        const ui = INVOICE_STATUS_UI[inv.status];
+                        return (
+                          <li
+                            key={inv.number}
+                            className="rounded-2xl border border-white/[0.07] bg-zinc-900/60 p-4"
+                          >
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="font-mono text-[12.5px] font-semibold text-zinc-200">
+                                {inv.number}
+                              </span>
+                              <span
+                                className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] ${ui.cls}`}
+                              >
+                                {ui.label}
+                              </span>
+                            </div>
+                            <p className="mt-1.5 truncate text-[12px] text-zinc-400">{inv.service}</p>
+                            <div className="mt-2.5 flex items-center justify-between gap-3">
+                              <div>
+                                <p className="font-display text-[15px] font-bold text-white">
+                                  {inv.amountIdrFormatted}
+                                </p>
+                                {inv.isForeign && (
+                                  <p className="text-[11px] text-zinc-500">
+                                    {inv.amountFormatted} · {inv.currency ?? ""}
+                                  </p>
+                                )}
+                              </div>
+                              <Link
+                                to={inv.url}
+                                className="inline-flex items-center gap-1.5 rounded-xl border border-violet-400/30 bg-violet-500/10 px-3.5 py-2 text-[11.5px] font-bold text-violet-300 transition-colors hover:bg-violet-500/20"
+                              >
+                                Buka Invoice
+                                <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+                              </Link>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
                 </div>
 
                 {/* Pembayaran QRIS */}

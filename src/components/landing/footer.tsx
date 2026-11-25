@@ -22,6 +22,7 @@ const FIRM_LINKS = [
 
 const CLIENT_LINKS = [
   { to: "/portal", label: "Portal Klien" },
+  { to: "/invoice", label: "Invoice Online" },
   { to: "/payment", label: "Pembayaran QRIS" },
   { to: "/booking", label: "Jadwalkan Sesi" },
   { to: "/pricing", label: "Harga & Paket" },

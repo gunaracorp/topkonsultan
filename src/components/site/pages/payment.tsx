@@ -5,11 +5,13 @@
  * ----------------------------------------------------------------------------
  * Satu QRIS untuk semua: halaman pembayaran publik dengan QR resmi
  * PusatPerizinan.com (NMID ID1026629416698), kalkulator konfirmasi
- * pembayaran via WhatsApp, dan panduan 3 langkah.
+ * pembayaran via WhatsApp, panduan 3 langkah, pratinjau QRIS DINAMIS
+ * (nominal tertanam), dan konverter multi-mata uang (Transaksi Penuh).
  */
 
 import { motion } from "framer-motion";
 import {
+  ArrowUpRight,
   BadgeCheck,
   CheckCircle2,
   Copy,
@@ -17,24 +19,33 @@ import {
   ExternalLink,
   FileText,
   Fingerprint,
+  Globe2,
   Landmark,
   Lock,
   MessageCircle,
   QrCode,
+  Receipt,
   ShieldCheck,
   Smartphone,
   UserRound,
   Wallet,
+  Zap,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "@/lib/router";
 import { BRAND } from "@/data/brand";
 import {
+  CURRENCIES,
   QRIS,
   QRIS_STEPS,
   QRIS_SUPPORTED_APPS,
+  RATES_REF_DATE,
   buildPaymentWhatsAppUrl,
+  convertToIdr,
+  formatIdr,
+  formatMoney,
 } from "@/data/payment";
+import { buildQrisDynamicPayload } from "@/lib/qris";
 
 const SERVICE_OPTIONS = [
   "Pendirian PT / PT PMA",
@@ -62,6 +73,30 @@ export default function PaymentPage() {
   const [amount, setAmount] = useState<number>(0);
   const [ticket, setTicket] = useState("");
   const [copied, setCopied] = useState(false);
+
+  /* Transaksi Penuh — pratinjau QRIS dinamis */
+  const [dynAmount, setDynAmount] = useState<number>(2_500_000);
+  const dynPayload = useMemo(() => {
+    try {
+      return buildQrisDynamicPayload({
+        amountIdr: dynAmount,
+        reference: "TOPKONSULTANWEB",
+        nmid: QRIS.nmid,
+        merchantName: QRIS.merchant,
+        city: "JAKARTA",
+      });
+    } catch {
+      return null;
+    }
+  }, [dynAmount]);
+
+  /* Transaksi Penuh — konverter multi-mata uang */
+  const [convAmount, setConvAmount] = useState<number>(850);
+  const [convCurrency, setConvCurrency] = useState<string>("USD");
+  const convIdr = useMemo(
+    () => (convAmount > 0 ? convertToIdr(convAmount, convCurrency) : 0),
+    [convAmount, convCurrency]
+  );
 
   const finalService = service === "__lainnya" ? customService : service;
 
@@ -341,6 +376,167 @@ export default function PaymentPage() {
             <span className="inline-flex items-center rounded-full border border-dashed border-violet-300 bg-violet-50 px-4 py-2 text-[13px] font-semibold text-violet-700">
               + semua bank & e-wallet berlogo QRIS
             </span>
+          </div>
+        </motion.div>
+
+        {/* ── Transaksi Penuh: QRIS dinamis + multi-mata uang + invoice ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5 }}
+          className="mt-16 overflow-hidden rounded-3xl border border-violet-100 bg-gradient-to-br from-violet-50 via-white to-blue-50 p-7 sm:p-9"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <h2 className="flex items-center gap-3 font-display text-xl font-bold tracking-tight text-slate-900">
+              <Zap className="h-5 w-5 text-violet-600" aria-hidden="true" />
+              Transaksi Penuh — Nominal Tertanam & Multi-Mata Uang
+            </h2>
+            <span className="rounded-full border border-violet-200 bg-white px-3.5 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-violet-700">
+              v2.4 · baru
+            </span>
+          </div>
+
+          <div className="mt-7 grid gap-6 lg:grid-cols-3">
+            {/* QRIS dinamis */}
+            <div className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6">
+              <h3 className="flex items-center gap-2 text-[14px] font-bold text-slate-800">
+                <QrCode className="h-4 w-4 text-violet-600" aria-hidden="true" />
+                Coba QRIS Dinamis
+              </h3>
+              <p className="mt-1.5 text-[12.5px] leading-relaxed text-slate-500">
+                Isi nominal — QR di bawah berubah seketika dengan nilai Rupiah tertanam di
+                dalamnya. Beginilah QR yang tercantum di setiap invoice resmi kami.
+              </p>
+              <label htmlFor="dyn-amount" className="sr-only">
+                Nominal Rupiah
+              </label>
+              <input
+                id="dyn-amount"
+                type="number"
+                min={1000}
+                step={500000}
+                value={dynAmount || ""}
+                onChange={(e) => setDynAmount(Math.max(0, Number(e.target.value) || 0))}
+                className="mt-4 h-12 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-slate-800 outline-none transition-all focus:border-violet-400 focus:bg-white focus:ring-2 focus:ring-violet-500/20"
+              />
+              <p className="mt-1.5 text-[12px] font-medium text-violet-700">
+                {dynAmount > 0 ? formatIdr(dynAmount) : "Masukkan nominal (min. Rp 1.000)"}
+              </p>
+              <div className="mt-4 flex flex-1 items-center justify-center rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                {dynPayload && dynAmount >= 1000 ? (
+                  <img
+                    src={`/api/qris?payload=${encodeURIComponent(dynPayload)}`}
+                    alt={`Pratinjau QRIS dinamis dengan nominal ${formatIdr(dynAmount)} tertanam`}
+                    width={512}
+                    height={512}
+                    className="h-36 w-36 rounded-xl bg-white"
+                  />
+                ) : (
+                  <p className="px-6 py-9 text-center text-[12px] text-slate-400">
+                    QR muncul saat nominal ≥ Rp 1.000
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Konverter multi-mata uang */}
+            <div className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6">
+              <h3 className="flex items-center gap-2 text-[14px] font-bold text-slate-800">
+                <Globe2 className="h-4 w-4 text-violet-600" aria-hidden="true" />
+                Konverter untuk Klien Internasional
+              </h3>
+              <p className="mt-1.5 text-[12.5px] leading-relaxed text-slate-500">
+                Tagihan Anda dalam {CURRENCIES.length - 1} mata uang utama, terbayar Rupiah via
+                QRIS — satu kode, semua aplikasi.
+              </p>
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <div>
+                  <label htmlFor="conv-currency" className="sr-only">
+                    Mata uang
+                  </label>
+                  <select
+                    id="conv-currency"
+                    value={convCurrency}
+                    onChange={(e) => setConvCurrency(e.target.value)}
+                    className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-semibold text-slate-800 outline-none transition-all focus:border-violet-400 focus:bg-white focus:ring-2 focus:ring-violet-500/20"
+                  >
+                    {CURRENCIES.filter((c) => c.code !== "IDR").map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.code}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="conv-amount" className="sr-only">
+                    Nominal
+                  </label>
+                  <input
+                    id="conv-amount"
+                    type="number"
+                    min={0}
+                    value={convAmount || ""}
+                    onChange={(e) => setConvAmount(Math.max(0, Number(e.target.value) || 0))}
+                    className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-slate-800 outline-none transition-all focus:border-violet-400 focus:bg-white focus:ring-2 focus:ring-violet-500/20"
+                  />
+                </div>
+              </div>
+              <div className="mt-4 flex flex-1 flex-col justify-center rounded-2xl border border-violet-100 bg-violet-50/60 p-5">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+                  Ekuivalen QRIS
+                </p>
+                <p className="mt-1.5 font-display text-2xl font-black tracking-tight text-slate-900">
+                  {formatIdr(convIdr)}
+                </p>
+                <p className="mt-1 text-[12px] text-slate-500">
+                  {convAmount > 0 ? `${formatMoney(convAmount, convCurrency)} × kurs referensi` : "Masukkan nominal"}
+                </p>
+              </div>
+              <p className="mt-3 text-[11px] leading-relaxed text-slate-400">
+                Kurs referensi per {RATES_REF_DATE} — kurs final dikonfirmasi officer saat invoice
+                diterbitkan.
+              </p>
+            </div>
+
+            {/* Invoice online */}
+            <div className="flex flex-col rounded-2xl border-2 border-violet-200 bg-white p-6">
+              <h3 className="flex items-center gap-2 text-[14px] font-bold text-slate-800">
+                <Receipt className="h-4 w-4 text-violet-600" aria-hidden="true" />
+                Invoice Online Resmi
+              </h3>
+              <p className="mt-1.5 text-[12.5px] leading-relaxed text-slate-500">
+                Setiap tagihan kami kini hadir sebagai dokumen digital: nomor invoice unik, kunci
+                akses privat, QRIS dinamis dengan nominal tepat, hingga tombol cetak PDF.
+              </p>
+              <ul className="mt-4 space-y-2.5 text-[12.5px] text-slate-600">
+                {[
+                  "Nominal & referensi tertanam di QR — tanpa salah ketik",
+                  `Diterbitkan dalam ${CURRENCIES.length} mata uang, dibayar Rupiah`,
+                  "Status LUNAS diperbarui officer & tampil di Portal Klien",
+                ].map((t) => (
+                  <li key={t} className="flex items-start gap-2.5">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" aria-hidden="true" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-auto flex flex-col gap-2.5 pt-5">
+                <Link
+                  to="/invoice?no=INV-DEMO2026&k=DEMO"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-500 text-[13px] font-bold text-white transition-transform duration-300 hover:scale-[1.02] active:scale-95"
+                >
+                  Lihat Contoh Invoice
+                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+                <Link
+                  to="/invoice"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 text-[13px] font-semibold text-slate-700 transition-colors hover:border-violet-300 hover:text-violet-700"
+                >
+                  Buka Invoice Saya
+                </Link>
+              </div>
+            </div>
           </div>
         </motion.div>
 

@@ -42,6 +42,70 @@ export const QRIS_SUPPORTED_APPS: { name: string; note: string }[] = [
   { name: "blu", note: "Bank BCA Digital" },
 ];
 
+/* ============================ MULTI-MATA UANG =============================== */
+
+/**
+ * Kurs referensi (per 1 unit mata uang → Rupiah) untuk klien internasional.
+ * QRIS selalu menyelesaikan dana dalam Rupiah; nominal asing dikonversi ke
+ * ekuivalen IDR saat invoice diterbitkan, memakai tabel referensi ini.
+ *
+ * CATATAN KEBENARAN: ini adalah kurs referensi statis bertanggal RATES_REF_DATE
+ * (bukan kurs live) — kurs final dikonfirmasi officer saat penerbitan invoice.
+ */
+export const RATES_REF_DATE = "2026-11-25";
+
+export interface CurrencyInfo {
+  code: string;
+  name: string;
+  /** Simbol tampilan (aman untuk font umum). */
+  symbol: string;
+  /** Rupiah per 1 unit mata uang ini (kurs referensi). */
+  rateToIdr: number;
+  /** locale Intl untuk format angka. */
+  locale: string;
+}
+
+export const CURRENCIES: CurrencyInfo[] = [
+  { code: "IDR", name: "Rupiah Indonesia", symbol: "Rp", rateToIdr: 1, locale: "id-ID" },
+  { code: "USD", name: "Dolar Amerika Serikat", symbol: "US$", rateToIdr: 15_800, locale: "en-US" },
+  { code: "EUR", name: "Euro", symbol: "€", rateToIdr: 17_200, locale: "de-DE" },
+  { code: "SGD", name: "Dolar Singapura", symbol: "S$", rateToIdr: 11_900, locale: "en-SG" },
+  { code: "GBP", name: "Pound Sterling", symbol: "£", rateToIdr: 20_100, locale: "en-GB" },
+  { code: "JPY", name: "Yen Jepang", symbol: "¥", rateToIdr: 106, locale: "ja-JP" },
+  { code: "AUD", name: "Dolar Australia", symbol: "A$", rateToIdr: 10_400, locale: "en-AU" },
+  { code: "CNY", name: "Yuan Tiongkok", symbol: "CN¥", rateToIdr: 2_190, locale: "zh-CN" },
+  { code: "AED", name: "Dirham Uni Emirat Arab", symbol: "AED", rateToIdr: 4_300, locale: "en-AE" },
+  { code: "SAR", name: "Riyal Arab Saudi", symbol: "SAR", rateToIdr: 4_210, locale: "en-SA" },
+  { code: "MYR", name: "Ringgit Malaysia", symbol: "RM", rateToIdr: 3_550, locale: "ms-MY" },
+  { code: "THB", name: "Baht Thailand", symbol: "฿", rateToIdr: 460, locale: "th-TH" },
+];
+
+export function findCurrency(code: string): CurrencyInfo | undefined {
+  return CURRENCIES.find((c) => c.code === code.toUpperCase());
+}
+
+/** Konversi nominal mata uang apa pun → ekuivalen Rupiah (kurs referensi). */
+export function convertToIdr(amount: number, currency: string): number {
+  const cur = findCurrency(currency) ?? CURRENCIES[0];
+  return Math.round(amount * cur.rateToIdr);
+}
+
+/** Format nominal mata uang yang rapi dan konsisten (tanpa sen). */
+export function formatMoney(amount: number, currency: string): string {
+  const cur = findCurrency(currency) ?? CURRENCIES[0];
+  const n = new Intl.NumberFormat(cur.locale, { maximumFractionDigits: 0 }).format(
+    Math.round(amount)
+  );
+  return `${cur.symbol} ${n}`;
+}
+
+/** Format Rupiah khusus — dipakai semua titik pembayaran. */
+export function formatIdr(amountIdr: number): string {
+  return `Rp ${new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 }).format(
+    Math.round(amountIdr)
+  )}`;
+}
+
 /** Tiga langkah pembayaran standar QRIS. */
 export const QRIS_STEPS: { title: string; desc: string }[] = [
   {
