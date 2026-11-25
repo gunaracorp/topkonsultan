@@ -1,6 +1,6 @@
 {
   "name": "topkonsultan",
-  "version": "2.2.2.2.2",
+  "version": "2.3.1.0.0",
   "private": true,
   "engines": {
     "node": ">=20.9.0"

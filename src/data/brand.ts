@@ -35,9 +35,9 @@ export const BRAND = {
    * (manifest PWA, footer, /api) membaca konstanta ini otomatis.
    * Penjaga sinkronisasi: `bun run version:check`. Riwayat: CHANGELOG.md.
    */
-  version: "v2.2.2.2.2",
-  versionCode: "2.2.2.2.2",
-  versionName: "Lima Pilar",
+  version: "v2.3.1.0.0",
+  versionCode: "2.3.1.0.0",
+  versionName: "Gerbang Klien",
 
   /** Official business line — WhatsApp & telepon satu nomor, aktif 24/7 */
   phone: "+62 813-1651-6524",

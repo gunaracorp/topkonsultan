@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { registerMemoryCase, TYPE_LABELS } from "@/lib/portal";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -86,7 +87,16 @@ export async function POST(req: Request) {
       });
       console.log(`[contact] persisted ${refCode} (${type})`);
     } catch (dbError) {
-      // Shared-hosting fallback: keep the covenant even without a database
+      // Shared-hosting fallback: keep the covenant even without a database.
+      // Kasus tetap terdaftar di Portal Klien (fallback memori) supaya klien
+      // bisa langsung memantau status dengan tiket + email mereka.
+      registerMemoryCase({
+        refCode,
+        email,
+        name,
+        company: company || null,
+        service: TYPE_LABELS[type] ?? "Konsultasi Umum",
+      });
       memoryFallback.push({
         id: refCode,
         refCode,

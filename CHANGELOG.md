@@ -6,6 +6,23 @@ Format bersandar pada [Keep a Changelog](https://keepachangelog.com/id/1.1.0/) d
 
 ---
 
+## [2.3.1.0.0] — 2026-11-25 · "Gerbang Klien" (The Client Gateway)
+
+### Ditambahkan
+- **Portal Klien (`/portal`)** — dasbor privat setiap klien: login dengan nomor tiket `TOP-XXXXXX` + email brief, timeline enam tahap penanganan (Brief Diterima → Verifikasi Berkas → Penyusunan Dokumen → Pengurusan ke Instansi → Serah Terima → Selesai & Garansi), checklist dokumen kasus, kanal pembayaran, dan jalur langsung ke officer via WhatsApp.
+- **Sesi tanpa password**: token HMAC-SHA256 bertanda-tangan (berlaku 7 hari) — tanpa menyimpan kredensial apa pun; verifikasi tiket+email terhadap database, dengan fallback memori penuh untuk serverless.
+- **API `/api/portal`** — aksi `login` & `case`; kasus otomatis ter-bootstrap dari ContactMessage saat klien pertama kali masuk; form kontak kini mendaftarkan kasus ke portal sejak tiket terbit.
+- **Tabel `ClientCase`** (Prisma) — status tahap, catatan officer, dan layanan per tiket, dipersist di SQLite.
+- **Halaman Pembayaran QRIS (`/payment`)** — QRIS resmi **PusatPerizinan.com** (NMID **ID1026629416698**, terminal A01) terpasang: kartu QR besar dengan tombol unduh & cek NMID ke aspi-qris.id, kalkulator konfirmasi pembayaran (layanan + nominal + tiket → pesan WhatsApp terisi otomatis), panduan 3 langkah, 12+ aplikasi yang didukung, dan jaminan keamanan merchant.
+- **Kasus demo permanen**: tiket `TOP-DEMO2026` · email `demo@pusatperizinan.com` (tahap 3, Penyusunan Dokumen) — siapa pun bisa mencoba portal.
+- Navigasi baru: tombol **Portal Klien** & **Bayar QRIS** di navbar desktop, item menu mobile, dan kolom footer **"Untuk Klien"**.
+
+### Diubah
+- `SITE_LASTMOD` → 2026-11-25; `/payment` masuk sitemap (indeksable), `/portal` sengaja `noindex` seperti `/vvip` (privat).
+- Skema versi naik ke MAYOR 3 (era Portal Klien) + MINOR 1 (QRIS) sesuai roadmap.
+
+---
+
 ## [2.2.2.2.2] — 2026-11-25 · "Lima Pilar" (The Five Pillars)
 
 ### Ditambahkan

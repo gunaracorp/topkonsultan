@@ -150,7 +150,7 @@ export type RouteKind =
   | "legal" | "vvip" | "service-detail" | "perizinan-detail"
   | "council-detail" | "industry-detail" | "insight-detail" | "not-found"
   | "jasa" | "jasa-category" | "jasa-detail"
-  | "pricing" | "global" | "booking" | "awards";
+  | "pricing" | "global" | "booking" | "awards" | "portal" | "payment";
 
 /** Bahasa hreflang inti untuk halaman katalog 500 jasa (ringkas & jujur). */
 const JASA_LANGS: readonly string[] = ["id", "en"];
@@ -342,6 +342,27 @@ const STATIC_SEO: Record<string, StaticSeo> = {
     description:
       "Member Lounge VVIP PT TOP KONSULTAN INTERNASIONAL — akses eksklusif dengan kode undangan.",
     noindex: true,
+  },
+  "/portal": {
+    kind: "portal",
+    title: `Portal Klien — ${S}`,
+    description:
+      "Portal Klien PT TOP KONSULTAN INTERNASIONAL — masuk dengan nomor tiket dan email Anda untuk memantau timeline penanganan izin, dokumen, dan pembayaran secara real-time.",
+    noindex: true,
+  },
+  "/payment": {
+    kind: "payment",
+    title: `Pembayaran QRIS — Satu QRIS untuk Semua — ${S}`,
+    description:
+      "Bayar layanan konsultan & perizinan PT TOP KONSULTAN INTERNASIONAL via QRIS resmi PusatPerizinan.com (NMID ID1026629416698) — menerima GoPay, OVO, DANA, ShopeePay, LinkAja, dan semua mobile banking Indonesia.",
+    keywords: [
+      "pembayaran qris",
+      "qris pusatperizinan",
+      "bayar konsultan",
+      "bayar perizinan",
+      "qris konsultan",
+      "NMID ID1026629416698",
+    ],
   },
 };
 
@@ -643,6 +664,7 @@ export function buildSitemapEntries(): SitemapEntry[] {
     { path: "/pricing", priority: 0.8, changeFrequency: "monthly", lastModified: SITE_LASTMOD },
     { path: "/global", priority: 0.8, changeFrequency: "monthly", lastModified: SITE_LASTMOD },
     { path: "/booking", priority: 0.9, changeFrequency: "weekly", lastModified: SITE_LASTMOD },
+    { path: "/payment", priority: 0.8, changeFrequency: "monthly", lastModified: SITE_LASTMOD },
     { path: "/awards", priority: 0.7, changeFrequency: "monthly", lastModified: SITE_LASTMOD },
     { path: "/faq", priority: 0.8, changeFrequency: "monthly", lastModified: SITE_LASTMOD },
     { path: "/about", priority: 0.7, changeFrequency: "monthly", lastModified: SITE_LASTMOD },

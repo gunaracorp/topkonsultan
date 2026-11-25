@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, Sparkles, X } from "lucide-react";
+import { Menu, QrCode, Sparkles, UserRound, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useRoute } from "@/lib/router";
 import { useI18n } from "@/lib/i18n";
@@ -10,7 +10,14 @@ import LanguagePicker from "./language-picker";
 import { LogoMark, Wordmark } from "./logo";
 import { EASE } from "./motion";
 
-const NAV_LINKS: { to: string; key: TranslationKey }[] = [
+/** Item nav: key terjemahan ATAU label literal (untuk halaman baru). */
+interface NavItem {
+  to: string;
+  key?: TranslationKey;
+  label?: string;
+}
+
+const NAV_LINKS: NavItem[] = [
   { to: "/perizinan", key: "nav.perizinan" },
   { to: "/jasa", key: "nav.jasa" },
   { to: "/services", key: "nav.layanan" },
@@ -20,7 +27,9 @@ const NAV_LINKS: { to: string; key: TranslationKey }[] = [
   { to: "/about", key: "nav.tentang" },
 ];
 
-const MENU_EXTRA: { to: string; key: TranslationKey }[] = [
+const MENU_EXTRA: NavItem[] = [
+  { to: "/portal", label: "Portal Klien" },
+  { to: "/payment", label: "Bayar via QRIS" },
   { to: "/pricing", key: "nav.paket" },
   { to: "/global", key: "nav.global" },
   { to: "/booking", key: "nav.jadwal" },
@@ -31,6 +40,9 @@ const MENU_EXTRA: { to: string; key: TranslationKey }[] = [
   { to: "/faq", key: "nav.faq" },
   { to: "/contact", key: "nav.kontak" },
 ];
+
+const navLabel = (l: NavItem, t: (k: TranslationKey) => string) =>
+  l.label ?? (l.key ? t(l.key) : l.to);
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -81,7 +93,7 @@ export default function Navbar() {
           {NAV_LINKS.map((l) => (
             <li key={l.to}>
               <Link to={l.to} className={linkCls(l.to)}>
-                {t(l.key)}
+                {navLabel(l, t)}
                 <span
                   className={`absolute -bottom-1.5 left-0 h-px w-full origin-left bg-gradient-to-r from-violet-600 to-indigo-500 transition-transform duration-300 ${
                     activeSeg === l.to.slice(1) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
@@ -94,6 +106,22 @@ export default function Navbar() {
 
         <div className="flex items-center gap-2.5">
           <LanguagePicker />
+          <Link
+            to="/portal"
+            title="Portal Klien — masuk dengan nomor tiket Anda"
+            className="hidden h-11 items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-4 text-[13px] font-semibold text-slate-700 backdrop-blur transition-colors hover:border-violet-400/60 hover:text-violet-700 sm:inline-flex"
+          >
+            <UserRound className="h-4 w-4" aria-hidden="true" />
+            Portal Klien
+          </Link>
+          <Link
+            to="/payment"
+            title="Bayar via QRIS — satu QRIS untuk semua"
+            className="hidden h-11 items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 text-[13px] font-semibold text-violet-700 transition-colors hover:border-violet-400/60 hover:bg-violet-100 lg:inline-flex"
+          >
+            <QrCode className="h-4 w-4" aria-hidden="true" />
+            Bayar QRIS
+          </Link>
           <Link
             to="/contact"
             className="shine hidden items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 via-indigo-500 to-blue-600 px-5 py-2.5 text-[13px] font-bold text-white shadow-[0_8px_30px_-8px_rgba(139,92,246,0.42)] transition-transform duration-300 hover:scale-[1.04] active:scale-95 sm:inline-flex"
@@ -137,7 +165,7 @@ export default function Navbar() {
                       activeSeg === l.to.slice(1) ? "bg-violet-50 text-violet-600" : "text-slate-600"
                     }`}
                   >
-                    {t(l.key)}
+                    {navLabel(l, t)}
                     <span className="text-[10px] font-bold text-slate-400">
                       {String(i + 1).padStart(2, "0")}
                     </span>

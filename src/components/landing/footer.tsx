@@ -20,6 +20,13 @@ const FIRM_LINKS = [
   { to: "/contact", label: "Hubungi Kami" },
 ];
 
+const CLIENT_LINKS = [
+  { to: "/portal", label: "Portal Klien" },
+  { to: "/payment", label: "Pembayaran QRIS" },
+  { to: "/booking", label: "Jadwalkan Sesi" },
+  { to: "/pricing", label: "Harga & Paket" },
+];
+
 const LEGAL_LINKS = [
   { to: "/privacy", label: "Kebijakan Privasi" },
   { to: "/terms", label: "Syarat & Ketentuan" },
@@ -284,6 +291,21 @@ export default function Footer() {
             </nav>
 
             <div className="flex flex-col gap-8">
+              <nav aria-label="Untuk Klien">
+                <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-slate-900">
+                  Untuk Klien
+                </h3>
+                <ul className="space-y-2.5 text-sm">
+                  {CLIENT_LINKS.map((l) => (
+                    <li key={l.to}>
+                      <Link to={l.to} className="text-slate-500 transition-colors hover:text-violet-600">
+                        {l.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+
               <nav aria-label="Dewan Pakar">
                 <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-slate-900">
                   Dewan Pakar
